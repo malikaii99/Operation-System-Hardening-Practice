@@ -1,39 +1,40 @@
 # Operation-System-Hardening-Practice
 <h1>Description</h1>
-I examined DNS and ICMP traffic in transit by utilizing data from a network protocol analysis tool. My goal was to determine the specific network protocol involved in evaluating the cybersecurity incident.
-Within the Internet layer of the TCP/IP model, IP takes data packets and structures them into IP datagrams. The content within these datagrams of an IP packet offered security analysts valuable information about potentially suspicious data packets as they traveled through the network.
-I became proficient in recognizing potentially harmful network traffic, which is crucial for cybersecurity analyst. It enables me to evaluate security threats within the network and enhance overall network security
+In this exercise, I assumed the role of a cybersecurity analyst employed by a company hosting the cooking website, yummyrecipesforme.com. The website's visitors encountered a security issue while loading the main webpage, and my responsibility was to conduct a thorough investigation, identify the problem, document your findings, and propose a solution to rectify the security issue.
+
+During my investigation of this security event, I examined a tcpdump log to uncover the network protocols employed in establishing connections between users and the website. These network protocols serve as the rules and standards governing data transmission among networked devices. Unfortunately, malicious actors can exploit these very protocols to infiltrate and attack private networks. Acquiring the skill to identify commonly used attack protocols is crucial for safeguarding your organization's network against such security incidents.
+
+In successfully completing this assignment, I compiled a detailed account of the events surrounding the security incident and provided a recommendation for implementing a security measure to prevent similar issues from occurring in the future.
 
 <h2>Scenario</h2>
-Review the scenario below. 
+Review the scenario below.
 
-You are a cybersecurity analyst working at a company that specializes in providing IT consultant services. Several customers contacted your company to report that they were not able to access the company website www.yummyrecipesforme.com, and saw the error “destination port unreachable” after waiting for the page to load. 
-You are tasked with analyzing the situation and determining which network protocol was affected during this incident. To start, you visit the website and you also receive the error “destination port unreachable.” Next, you load your network analyzer tool, tcpdump, and load the webpage again. This time, you receive a lot of packets in your network analyzer. The analyzer shows that when you send UDP packets and receive an ICMP response returned to your host, the results contain an error message: “udp port 53 unreachable.” 
+You are a cybersecurity analyst for yummyrecipesforme.com, a website that sells recipes and cookbooks. A disgruntled baker has decided to publish the website’s best-selling recipes for the public to access for free. 
 
-13:24:32.192571 IP 192.51.52444 > 203.0.113.2.domain: 35084+ A? yummyrecipesforme.com (24)
+The baker executed a brute force attack to gain access to the web host. They repeatedly entered several known default passwords for the administrative account until they correctly guessed the right one. After they obtained the login credentials, they were able to access the admin panel and change the website’s source code. They embedded a javascript function in the source code that prompted visitors to download and run a file upon visiting the website. After running the downloaded file, the customers are redirected to a fake version of the website where the seller’s recipes are now available for free.
 
-13:24:36.098564 IP 203.0.113.2 > 192.51.100.15: ICMP 203.0.113.2 udp port 53 unreachable length 254
+Several hours after the attack, multiple customers emailed yummyrecipesforme’s helpdesk. They complained that the company’s website had prompted them to download a file to update their browsers. The customers claimed that, after running the file, the address of the website changed and their personal computers began running more slowly. 
 
-13:26:32.192571 IP 192.51.52444 > 203.0.113.2.domain: 35084+ A? yummyrecipesforme.com (24)
+In response to this incident, the website owner tries to log in to the admin panel but is unable to, so they reach out to the website hosting provider. You and other cybersecurity analysts are tasked with investigating this security event.
 
-13:27:15.934126 IP 203.0.113.2 > 192.51.100.15: ICMP 203.0.113.2 udp port 53 unreachable length 320
-
-13:28:32.192571 IP 192.51.52444 > 203.0.113.2.domain: 35084+ A? yummyrecipesforme.com (24)
-
-13:28:50.022967 IP 203.0.113.2 > 192.51.100.15: ICMP 203.0.113.2 udp port 53 unreachable length 150
+To address the incident, you create a sandbox environment to observe the suspicious website behavior. You run the network protocol analyzer tcpdump, then type in the URL for the website, yummyrecipesforme.com. As soon as the website loads, you are prompted to download an executable file to update your browser. You accept the download and allow the file to run. You then observe that your browser redirects you to a different URL, greatrecipesforme.com, which is designed to look like the original site. However, the recipes your company sells are now posted for free on the new website.  
 
 
-- <a> In the DNS and ICMP logs, you will find the following information: </a>
-    -  In the first two lines of the log file, you see the initial outgoing request from your computer to the DNS server requesting the IP address of yummyrecipesforme.com. This request is sent in a UDP packet.
-    -  Next, you find timestamps that indicate when the event happened. In the log, this is the first sequence of numbers displayed. For example: 13:24:32.192571. This displays the time 1:24 p.m., 32.192571 seconds.
-    -  The source and destination IP address is next. In the error log, this information is displayed as: 192.51.100.15.52444 > 203.0.113.2.domain. The IP address to the left of the greater than (>) symbol is the source address. In this example, the source is your computer’s IP address. The IP address to the right of the greater than (>) symbol is the destination IP address. In this case, it is the IP address for the DNS server: 203.0.113.2.domain
-    -  The second and third lines of the log show the response to your initial ICMP request packet. In this case, the ICMP 203.0.113.2 line is the start of the error message indicating that the ICMP packet was undeliverable to the port of the DNS server.
-    -  Next are the protocol and port number, which displays which protocol was used to handle communications and which port it was delivered to. In the error log, this appears as: udp port 53 unreachable. This means that the UDP protocol was used to request a domain name resolution using the address of the DNS server over port 53. Port 53, which aligns to the .domain extension in 203.0.113.2.domain, is a well-known port for DNS service. The word “unreachable” in the message indicates the message did not go through to the DNS server. Your browser was not able to obtain the IP address for yummyrecipesforme.com, which it needs to access the website because no service was listening on the receiving DNS port as indicated by the ICMP error message “udp port 53 unreachable.”
-    -  The remaining lines in the log indicate that ICMP packets were sent two more times, but the same delivery error was received both times. 
+- <a> The logs show the following process: </a>
+    -  The browser requests a DNS resolution of the yummyrecipesforme.com URL.
+    -  The DNS replies with the correct IP address.
+    -  The browser initiates an HTTP request for the webpage.
+    -  The browser initiates the download of the malware.
+    -  The browser requests another DNS resolution for greatrecipesforme.com.
+    -  The DNS server responds with the new IP address.
+    -  The browser initiates an HTTP request to the new IP address.
 
+A senior analyst confirms that the website was compromised. The analyst checks the source code for the website. They notice that javascript code had been added to prompt website visitors to download an executable file. Analysis of the downloaded file found a script that redirects the visitors’ browsers from yummyrecipesforme.com to greatrecipesforme.com. 
 
-Now that you have captured data packets using a network analyzer tool, it is your job to identify which network protocol and service were impacted by this incident. Then, you will need to write a follow-up report.
-As an analyst, you can inspect network traffic and network data to determine what is causing network-related issues during cybersecurity incidents. Later in this course, you will demonstrate how to manage and resolve incidents. For now, you only need to analyze the situation. 
+The cybersecurity team reports that the web server was impacted by a brute force attack. The disgruntled baker was able to guess the password easily because the admin password was still set to the default password. Additionally, there were no controls in place to prevent a brute force attack. 
+
+Your job is to document the incident in detail, including identifying the network protocols used to establish the connection between the user and the website.  You should also recommend a security action to take to prevent brute force attacks in the future.
+
 
 
 <h3>Part 1: Provide a summary of the problem found in the DNS and ICMP traffic log</h3>
