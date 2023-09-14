@@ -35,7 +35,7 @@ The cybersecurity team reports that the web server was impacted by a brute force
 
 Your job is to document the incident in detail, including identifying the network protocols used to establish the connection between the user and the website.  You should also recommend a security action to take to prevent brute-force attacks in the future.
 
-- <a> Required Documents from Botium Toys </a>
+- <a> Required Documents </a>
   - [DNS & HTTP traffic log](https://github.com/malikaii99/Operation-System-Hardening-Practice/blame/728a4090581dc4dc43672afb885a8a84e6714fb5/DNS%20%26%20HTTP%20traffic%20log.docx)
 
 
